@@ -10,3 +10,7 @@
 .choice-col:hover{
     background-color: chartreuse;
 }
+
+.row{
+    margin: 10px 10px 10px 10px;
+}

@@ -24,11 +24,7 @@ viewScoresCol.append(viewScoresBtn);
 viewScoresBtn.text("View High Scores");
 
 //Get highscores array from local storage if it exists
-var highScores = [];
-if (localStorage.length !== 0) {
-    highScores = JSON.parse(localStorage.highScores);
-    console.log(highScores);
-}
+
 
 //Build Button Splash Area
 let questionRow = $("<div>").addClass("row no-gutters question-row");
@@ -44,10 +40,13 @@ splashButtonStart.click(startQuiz);
 let takingQuiz = false;
 let timer = 0;
 let correct = 0;
-var wrong = 0;
+let wrong = 0;
 let questionIndex = 0;
 let score = 0;
-
+let highScores = [];
+if (localStorage.length !== 0) {
+    highScores = JSON.parse(localStorage.highScores);
+}
 //MAIN FUNCTION - Executed after Splash Button clicked
 function startQuiz() {
 
@@ -110,7 +109,7 @@ function startQuiz() {
 
     //Function executed at the end of quiz | Displays Score Etc...
     function endQuiz() {
-        var user = "";
+        let user = "";
 
         updateTimer();
 
@@ -126,88 +125,88 @@ function startQuiz() {
         questionText.text("Quiz Finished");
 
         //Set Score Title Col and Score Title Text
-        var scoreCol = $("<div>").addClass("col-12");
+        let scoreCol = $("<div>").addClass("col-12");
         answerRow.append(scoreCol);
 
-        var scoreTitle = $("<h4>Score: </h4>").addClass("score-title");
+        let scoreTitle = $("<h4>Score: </h4>").addClass("score-title");
         scoreCol.append(scoreTitle);
 
-        var scoreText = $("<span>");
+        let scoreText = $("<span>");
         scoreTitle.append(scoreText);
         scoreText.text(score);
 
 
         //Display Total Time Col and Total Time Text and set total time text
-        var totalTimeCol = $("<div>").addClass("col-12 px-2");
+        let totalTimeCol = $("<div>").addClass("col-12 px-2");
         answerRow.append(totalTimeCol);
 
-        var totalTimeTitle = $("<h5>").addClass("score-key pr-2 text-nowrap");
+        let totalTimeTitle = $("<h5>").addClass("score-key pr-2 text-nowrap");
         totalTimeCol.append(totalTimeTitle);
         totalTimeTitle.text("Total Time: ");
 
-        var totalTimeText = $("<span>").addClass("score-value");
+        let totalTimeText = $("<span>").addClass("score-value");
         totalTimeTitle.append(totalTimeText);
         totalTimeText.text(`${((questions.length * 15) - (timer + (wrong * 10))).toFixed(2)} seconds`);
 
         //Same for Time Remaining
-        var timeRemainingCol = $("<div>").addClass("col-12 px-2");
+        let timeRemainingCol = $("<div>").addClass("col-12 px-2");
         answerRow.append(timeRemainingCol);
 
-        var timeRemainingTitle = $("<h5>").addClass("score-key pr-2 text-nowrap");
+        let timeRemainingTitle = $("<h5>").addClass("score-key pr-2 text-nowrap");
         timeRemainingCol.append(timeRemainingTitle);
         timeRemainingTitle.text("Time Remaining: ");
 
-        var timeRemainingText = $("<span>").addClass("score-value");
+        let timeRemainingText = $("<span>").addClass("score-value");
         timeRemainingTitle.append(timeRemainingText);
         timeRemainingText.text(`${timer.toFixed(2)} seconds`);
 
         //Same for Total Questions
-        var totalQuestionsCol = $("<div>").addClass("col-12 px-2");
+        let totalQuestionsCol = $("<div>").addClass("col-12 px-2");
         answerRow.append(totalQuestionsCol);
 
-        var totalQuestionsTitle = $("<h5>").addClass("score-key pr-2 text-nowrap");
+        let totalQuestionsTitle = $("<h5>").addClass("score-key pr-2 text-nowrap");
         totalQuestionsCol.append(totalQuestionsTitle);
         totalQuestionsTitle.text("Total Questions: ");
 
-        var totalQuestionsText = $("<span>").addClass("score-value");
+        let totalQuestionsText = $("<span>").addClass("score-value");
         totalQuestionsTitle.append(totalQuestionsText);
         totalQuestionsText.text(questionIndex + 1);
 
         //Same for Total Correct
-        var totalCorrectCol = $("<div>").addClass("col-12 px-2");
+        let totalCorrectCol = $("<div>").addClass("col-12 px-2");
         answerRow.append(totalCorrectCol);
 
-        var totalCorrectTitle = $("<h5>").addClass("score-key pr-2 text-nowrap");
+        let totalCorrectTitle = $("<h5>").addClass("score-key pr-2 text-nowrap");
         totalCorrectCol.append(totalCorrectTitle);
         totalCorrectTitle.text("Correct: ");
 
-        var totalCorrectText = $("<span>").addClass("score-value");
+        let totalCorrectText = $("<span>").addClass("score-value");
         totalCorrectTitle.append(totalCorrectText);
         totalCorrectText.text(correct);
 
         //Same for Total Wrong
-        var totalWrongCol = $("<div>").addClass("col-12 px-2");
+        let totalWrongCol = $("<div>").addClass("col-12 px-2");
         answerRow.append(totalWrongCol);
 
-        var totalWrongTitle = $("<h5>").addClass("score-key pr-2 text-nowrap");
+        let totalWrongTitle = $("<h5>").addClass("score-key pr-2 text-nowrap");
         totalWrongCol.append(totalWrongTitle);
         totalWrongTitle.text("Wrong: ");
 
-        var totalWrongText = $("<span>").addClass("score-value");
+        let totalWrongText = $("<span>").addClass("score-value");
         totalWrongTitle.append(totalWrongText);
         totalWrongText.text(wrong);
 
         //Create form to submit high score
-        var formCol = $("<div>").addClass("col form-col");
+        let formCol = $("<div>").addClass("col form-col");
         answerRow.append(formCol);
 
-        var form = $('<form>').addClass("input-name-form");
+        let form = $('<form>').addClass("input-name-form");
         formCol.append(form);
 
-        var inputName = $('<input type="text" placeholder="Enter Your Name Here" size="30" autofocus>')
+        let inputName = $('<input type="text" placeholder="Enter Your Name Here" size="30" autofocus>')
         form.append(inputName);
 
-        var inputNameSubmitBtn = $(`<input type="Submit" value="Submit">`);
+        let inputNameSubmitBtn = $(`<input type="Submit" value="Submit">`);
         form.append(inputNameSubmitBtn);
 
         form.submit(function (event) {
@@ -216,7 +215,7 @@ function startQuiz() {
             if (user === ""){
                 user = "Anonymous"
             }
-            var currentPerson = {
+            let currentPerson = {
                 userName: user,
                 userScore: score
             };
@@ -226,12 +225,16 @@ function startQuiz() {
                 highScores = [currentPerson];
                 localStorage.setItem("highScores", JSON.stringify(highScores));
             } else {
+                //If local storage not empty and score is less than or equal to lowest score
                 if (score <= highScores[highScores.length - 1].userScore) {
                     highScores.push(currentPerson);
                 } else {
+                //If local storage not empty and score is not less than or equal to lowest score
+                //check if score is higher than each score in array
                     for (let i = 0; i < highScores.length; i++) {
                         const person = highScores[i];
                         if (score > person.userScore) {
+                            //if score higher, insert currentPerson infront of this index
                             highScores.splice(i, 0, currentPerson);
                             break;
                         }
@@ -239,31 +242,28 @@ function startQuiz() {
                 }
             }
             localStorage.setItem("highScores", JSON.stringify(highScores));
-            console.log(highScores);
 
             //Clear Form
             form.remove();
 
             //Display High Scores
-
             //Create High Scores Title
-            var highScoreTitleCol = $("<div>").addClass("col-12");
+            let highScoreTitleCol = $("<div>").addClass("col-12 mt-2");
             answerRow.append(highScoreTitleCol);
-            var highScoreTitleText = $("<h4>High Scores: </h4>").addClass("score-title")
+            let highScoreTitleText = $("<h4>High Scores: </h4>").addClass("score-title")
             highScoreTitleCol.append(highScoreTitleText);
-            console.log(highScores);
             for (let i = 0; i < highScores.length; i++) {
                 const person = highScores[i];
                 
-                var personNameCol = $("<div>").addClass("col-7 col-sm-6 border-bottom mb-2 person-name-col");
+                let personNameCol = $("<div>").addClass("col-7 col-sm-6 border-bottom mb-2 person-name-col");
                 answerRow.append(personNameCol);
-                var personNameText = $("<span>").addClass("highscore-name");
+                let personNameText = $("<span>").addClass("highscore-name");
                 personNameCol.append(personNameText);
                 personNameText.text(person.userName);
 
-                var personScoreCol = $("<div>").addClass("col-auto border-bottom mb-2 person-score-col");
+                let personScoreCol = $("<div>").addClass("col-auto border-bottom mb-2 person-score-col");
                 answerRow.append(personScoreCol);
-                var personScoreText = $("<span>").addClass("highscore-score");
+                let personScoreText = $("<span>").addClass("highscore-score");
                 personScoreCol.append(personScoreText);
                 personScoreText.text(person.userScore);
                 
@@ -276,10 +276,10 @@ function startQuiz() {
     //Remove some content before creating quiz content
     splashButtonStart.remove();
 
-    //Create Col with <h4> question text
+    //Create Col with <h2> question text
     let questionTitleCol = $("<div>").addClass("col question-title-col");
     questionRow.append(questionTitleCol);
-    let questionText = $("<h4>").addClass("question-text");
+    let questionText = $("<h2>").addClass("question-text");
     questionTitleCol.append(questionText);
 
     //Create Col for timer <span>
@@ -289,7 +289,7 @@ function startQuiz() {
     timerCol.append(timerText);
 
     //Update timer every 10ms
-    var timerInterval = setInterval(
+    let timerInterval = setInterval(
         function () {
             timer -= .01;
             updateTimer();
