@@ -14,30 +14,35 @@ header.append(headerTitleCol);
 let headerText = $("<h1>JavaScript Quiz</h1>");
 headerTitleCol.append(headerText);
 
-//build View High Scores Button Col
-let viewScoresCol = $("<div>").addClass("col");
-header.append(viewScoresCol);
-
-//Build View High Scores Button
-let viewScoresBtn = $("<button>").addClass("btn mt-2 btn-sm btn-success");
-viewScoresCol.append(viewScoresBtn);
-viewScoresBtn.text("View High Scores");
-
-//Get highscores array from local storage if it exists
-
-
 //Build Button Splash Area
 let questionRow = $("<div>").addClass("row no-gutters question-row");
 mainContainer.append(questionRow);
 
+//Start Button Col
+let startButtonCol = $("<div>").addClass("col-auto mr-2");
+questionRow.append(startButtonCol);
+
+//Start Button
 let splashButtonStart = $("<button>Start</button>").addClass("btn btn-primary");
-questionRow.append(splashButtonStart);
+startButtonCol.append(splashButtonStart);
+
+//build View High Scores Button Col
+let viewScoresCol = $("<div>").addClass("col-auto");
+questionRow.append(viewScoresCol);
+
+//Build View High Scores Button
+let viewScoresBtn = $("<button>").addClass("btn btn-success");
+viewScoresCol.append(viewScoresBtn);
+viewScoresBtn.text("View High Scores");
 
 //Splash button executes main function startQuiz()
 splashButtonStart.click(startQuiz);
 
+//Create Answer Row
+let answerRow = $("<div>").addClass("row no-gutters answer-row");
+mainContainer.append(answerRow);
+
 //Set global quiz variables
-let takingQuiz = false;
 let timer = 0;
 let correct = 0;
 let wrong = 0;
@@ -47,16 +52,47 @@ let highScores = [];
 if (localStorage.length !== 0) {
     highScores = JSON.parse(localStorage.highScores);
 }
+
+viewScoresBtn.click(displayScores);
+
+function displayScores() {
+    viewScoresBtn.prop("disabled", true);
+    let highScoreTitleCol = $("<div>").addClass("col-12 mt-2");
+    answerRow.append(highScoreTitleCol);
+    let highScoreTitleText = $("<h4>High Scores: </h4>").addClass("score-title")
+    highScoreTitleCol.append(highScoreTitleText);
+    for (let i = 0; i < highScores.length; i++) {
+        const person = highScores[i];
+
+        let personNameCol = $("<div>").addClass("col-7 col-sm-6 border-bottom mb-2 person-name-col");
+        answerRow.append(personNameCol);
+        let personNameText = $("<span>").addClass("highscore-name");
+        personNameCol.append(personNameText);
+        personNameText.text(person.userName);
+
+        let personScoreCol = $("<div>").addClass("col-auto border-bottom mb-2 person-score-col");
+        answerRow.append(personScoreCol);
+        let personScoreText = $("<span>").addClass("highscore-score");
+        personScoreCol.append(personScoreText);
+        personScoreText.text(person.userScore);
+
+        answerRow.append($("<div>").addClass("w-100"));
+    }
+}
+
 //MAIN FUNCTION - Executed after Splash Button clicked
 function startQuiz() {
+    //Reset default variables
+    timer = 0;
+    correct = 0;
+    wrong = 0;
+    questionIndex = 0;
+    score = 0;
 
     //function to update timer display
     function updateTimer() {
         timerText.text(timer.toFixed(2));
     }
-
-    //might not use this delete later
-    takingQuiz = true;
 
     //Set timer based on questions[].length
     timer = questions.length * 15;
@@ -71,7 +107,7 @@ function startQuiz() {
         //Create Choice Col and <span> for each choice
         question.choices.forEach(choice => {
             //Create Choice Col and <span>
-            let choiceCol = $("<div>").addClass("col choice-col");
+            let choiceCol = $("<div>").addClass("col-7 col-sm-5 col-md choice-col mb-1 mr-1 pl-2");
             let choiceText = $("<span>").addClass("choice");
             choiceCol.append(choiceText);
             answerRow.append(choiceCol);
@@ -82,7 +118,7 @@ function startQuiz() {
             choiceCol.click(function () {
                 //If this(div for choice col)'s children's text content (which is the choice)
                 //equals the correct answer
-                if (this.children[0].textContent == question.answer) {
+                if (this.children[0].textContent === question.answer) {
                     //incriment correct count variable
                     correct++;
                 } else {
@@ -113,7 +149,7 @@ function startQuiz() {
 
         updateTimer();
 
-        score = Math.round(timer + (correct * timer * 10));
+        score = Math.round((correct * 1000) + (timer * 10));
 
         //Clean old answers
         answerRow.empty();
@@ -123,6 +159,15 @@ function startQuiz() {
 
         //Set main header to display "Quiz Finished"
         questionText.text("Quiz Finished");
+
+        //Show Retry Button
+        let retryBtnCol = $("<div>").addClass("col-auto mr-2 retry-btn-col")
+        questionTitleCol.after(retryBtnCol);
+
+        let retryBtn = $("<button>Retry</button>").addClass("btn btn-primary");
+        retryBtnCol.append(retryBtn);
+        retryBtn.prop("disabled", true);
+        retryBtn.click(startQuiz);
 
         //Set Score Title Col and Score Title Text
         let scoreCol = $("<div>").addClass("col-12");
@@ -209,10 +254,13 @@ function startQuiz() {
         let inputNameSubmitBtn = $(`<input type="Submit" value="Submit">`);
         form.append(inputNameSubmitBtn);
 
+        inputName.focus();
+
+        //Code to execute when name is submitted
         form.submit(function (event) {
             event.preventDefault();
             user = inputName.val();
-            if (user === ""){
+            if (user === "") {
                 user = "Anonymous"
             }
             let currentPerson = {
@@ -229,8 +277,8 @@ function startQuiz() {
                 if (score <= highScores[highScores.length - 1].userScore) {
                     highScores.push(currentPerson);
                 } else {
-                //If local storage not empty and score is not less than or equal to lowest score
-                //check if score is higher than each score in array
+                    //If local storage not empty and score is not less than or equal to lowest score
+                    //check if score is higher than each score in array
                     for (let i = 0; i < highScores.length; i++) {
                         const person = highScores[i];
                         if (score > person.userScore) {
@@ -248,42 +296,23 @@ function startQuiz() {
 
             //Display High Scores
             //Create High Scores Title
-            let highScoreTitleCol = $("<div>").addClass("col-12 mt-2");
-            answerRow.append(highScoreTitleCol);
-            let highScoreTitleText = $("<h4>High Scores: </h4>").addClass("score-title")
-            highScoreTitleCol.append(highScoreTitleText);
-            for (let i = 0; i < highScores.length; i++) {
-                const person = highScores[i];
-                
-                let personNameCol = $("<div>").addClass("col-7 col-sm-6 border-bottom mb-2 person-name-col");
-                answerRow.append(personNameCol);
-                let personNameText = $("<span>").addClass("highscore-name");
-                personNameCol.append(personNameText);
-                personNameText.text(person.userName);
-
-                let personScoreCol = $("<div>").addClass("col-auto border-bottom mb-2 person-score-col");
-                answerRow.append(personScoreCol);
-                let personScoreText = $("<span>").addClass("highscore-score");
-                personScoreCol.append(personScoreText);
-                personScoreText.text(person.userScore);
-                
-                answerRow.append($("<div>").addClass("w-100"));
-            }
-
+            displayScores();
+            retryBtn.prop("disabled", false);
         });
     }
 
     //Remove some content before creating quiz content
-    splashButtonStart.remove();
-
+    questionRow.empty();
+    answerRow.empty();
     //Create Col with <h2> question text
-    let questionTitleCol = $("<div>").addClass("col question-title-col");
+    let questionTitleCol = $("<div>").addClass("col-auto question-title-col");
     questionRow.append(questionTitleCol);
-    let questionText = $("<h2>").addClass("question-text");
+    let questionText = $("<h2>").addClass("question-text pr-3");
     questionTitleCol.append(questionText);
+    questionTitleCol.append($("<div>").addClass("w-100"));
 
     //Create Col for timer <span>
-    let timerCol = $("<div>").addClass("col-auto");
+    let timerCol = $("<div>").addClass("col");
     questionRow.append(timerCol);
     let timerText = $("<span>").addClass("timer-text");
     timerCol.append(timerText);
@@ -301,10 +330,6 @@ function startQuiz() {
         },
         10
     );
-
-    //Create Answer Row
-    let answerRow = $("<div>").addClass("row no-gutters answer-row");
-    mainContainer.append(answerRow);
 
     //Load question
     loadQuestion();

@@ -15,8 +15,8 @@ var questions = [
       answer: "<script>"
     },
     {
-      title: "Where is the correct place to insert a JavaScript?",
-      choices: ["The <body> section", "The <head> section", "Both the <head> section and the <body> section are correct"],
-      answer: "<script>"
+      title: "How do you create a function in JavaScript?",
+      choices: ["function myFunction()", "function:myFunction()", "function = myFunction()"],
+      answer: "function myFunction()"
     },
   ];

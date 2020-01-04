@@ -3,11 +3,13 @@
 }
 
 .choice-col{
+    border-radius: 5px;
     cursor: pointer;
     background-color: aquamarine;
+    /* box-shadow: 0px 0px 3px 3px black inset; */
 }
 
-.choice-col:hover{
+.choice-col:hover, .choice-col:active{
     background-color: chartreuse;
 }
 
