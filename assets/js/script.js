@@ -8,10 +8,10 @@ let header = $("<div>").addClass("row no-gutters header-row");
 mainContainer.append(header);
 
 //Build Page Title
-let headerTitleCol = $("<div>").addClass("col-auto mr-2")
+let headerTitleCol = $("<div>").addClass("col-12")
 header.append(headerTitleCol);
 
-let headerText = $("<h1>JavaScript Quiz</h1>");
+let headerText = $("<h1>JavaScript Quiz</h1>").addClass("header-text");
 headerTitleCol.append(headerText);
 
 //Build Button Splash Area
@@ -23,7 +23,7 @@ let startButtonCol = $("<div>").addClass("col-auto mr-2");
 questionRow.append(startButtonCol);
 
 //Start Button
-let splashButtonStart = $("<button>Start</button>").addClass("btn btn-primary");
+let splashButtonStart = $("<button>Start</button>").addClass("btn btn-myprime");
 startButtonCol.append(splashButtonStart);
 
 //build View High Scores Button Col
@@ -31,7 +31,7 @@ let viewScoresCol = $("<div>").addClass("col-auto");
 questionRow.append(viewScoresCol);
 
 //Build View High Scores Button
-let viewScoresBtn = $("<button>").addClass("btn btn-success");
+let viewScoresBtn = $("<button>").addClass("btn btn-myprime");
 viewScoresCol.append(viewScoresBtn);
 viewScoresBtn.text("View High Scores");
 
@@ -164,7 +164,7 @@ function startQuiz() {
         let retryBtnCol = $("<div>").addClass("col-auto mr-2 retry-btn-col")
         questionTitleCol.after(retryBtnCol);
 
-        let retryBtn = $("<button>Retry</button>").addClass("btn btn-primary");
+        let retryBtn = $("<button>Retry</button>").addClass("btn btn-myprime");
         retryBtnCol.append(retryBtn);
         retryBtn.prop("disabled", true);
         retryBtn.click(startQuiz);

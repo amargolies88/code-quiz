@@ -16,3 +16,20 @@
 .row{
     margin: 10px 10px 10px 10px;
 }
+
+.header-text{
+    text-shadow: 2px 1px aquamarine;
+    background-color: #dddddd;
+}
+
+.btn-myprime{
+    background-color: aquamarine;
+}
+
+.btn-myprime:hover:enabled, .btn-myprime:active{
+    background-color: chartreuse;
+}
+
+.btn-myprime:disabled{
+    background-color: #aaaaaa;
+}
