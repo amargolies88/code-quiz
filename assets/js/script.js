@@ -30,8 +30,16 @@ let questionIndex = 0;
 //MAIN FUNCTION - Executed after Splash Button clicked
 function startQuiz() {
 
+    //function to update timer display
+    function updateTimer(){
+        timerText.text(timer.toFixed(2));
+    }
+
     //might not use this delete later
     takingQuiz = true;
+
+    //Set timer based on questions[].length
+    timer = questions.length * 15;
 
     //Function to load question (first and every next until end of questions[])
     function loadQuestion() {
@@ -39,7 +47,7 @@ function startQuiz() {
         //Set question to current index
         let question = questions[questionIndex];
         questionText.text(question.title);
-    
+
         //Create Choice Col and <span> for each choice
         question.choices.forEach(choice => {
             //Create Choice Col and <span>
@@ -60,8 +68,9 @@ function startQuiz() {
                 } else {
                     //otherwise decrement wrong variable
                     wrong++;
+                    timer -= 10;
                 }
-
+                
                 //Clean old answers
                 answerRow.empty();
 
@@ -80,20 +89,91 @@ function startQuiz() {
 
     //Function executed at the end of quiz | Displays Score Etc...
     function endQuiz() {
+        updateTimer();
+        //Clean old answers
+        answerRow.empty();
+
+        //Pause Timer
+        clearInterval(timerInterval);
+
         //Set main header to display "Quiz Finished"
         questionText.text("Quiz Finished");
 
-        //Set Score display and stats
+        //Set Score Title Col and Score Title Text
+        var scoreCol = $("<div>").addClass("col-12");
+        answerRow.append(scoreCol);
 
-            //Display Total Time
+        var scoreText = $("<h4>Score: </h4>").addClass("score-title");
+        scoreCol.append(scoreText);
 
-            //Total Questions
+        //Display Total Time Col and Total Time Text and set total time text
+        var totalTimeCol = $("<div>").addClass("col-12 px-2");
+        answerRow.append(totalTimeCol);
 
-            //Total Correct
+        var totalTimeTitle = $("<h5>").addClass("score-key pr-2 text-nowrap");
+        totalTimeCol.append(totalTimeTitle);
+        totalTimeTitle.text("Total Time: ");
 
-            //Total Wrong
+        var totalTimeText = $("<span>").addClass("score-value");
+        totalTimeTitle.append(totalTimeText);
+        totalTimeText.text(`${((questions.length * 15) - (timer + (wrong * 10))).toFixed(2)} seconds`);
 
-            
+        //Same for Time Remaining
+        var timeRemainingCol = $("<div>").addClass("col-12 px-2");
+        answerRow.append(timeRemainingCol);
+
+        var timeRemainingTitle = $("<h5>").addClass("score-key pr-2 text-nowrap");
+        timeRemainingCol.append(timeRemainingTitle);
+        timeRemainingTitle.text("Time Remaining: ");
+
+        var timeRemainingText = $("<span>").addClass("score-value");
+        timeRemainingTitle.append(timeRemainingText);
+        timeRemainingText.text(`${timer.toFixed(2)} seconds`);
+
+        //Same for Total Questions
+        var totalQuestionsCol = $("<div>").addClass("col-12 px-2");
+        answerRow.append(totalQuestionsCol);
+
+        var totalQuestionsTitle = $("<h5>").addClass("score-key pr-2 text-nowrap");
+        totalQuestionsCol.append(totalQuestionsTitle);
+        totalQuestionsTitle.text("Total Questions: ");
+
+        var totalQuestionsText = $("<span>").addClass("score-value");
+        totalQuestionsTitle.append(totalQuestionsText);
+        totalQuestionsText.text(questionIndex + 1);
+
+        //Same for Total Correct
+        var totalCorrectCol = $("<div>").addClass("col-12 px-2");
+        answerRow.append(totalCorrectCol);
+
+        var totalCorrectTitle = $("<h5>").addClass("score-key pr-2 text-nowrap");
+        totalCorrectCol.append(totalCorrectTitle);
+        totalCorrectTitle.text("Correct: ");
+
+        var totalCorrectText = $("<span>").addClass("score-value");
+        totalCorrectTitle.append(totalCorrectText);
+        totalCorrectText.text(correct);
+
+        //Same for Total Wrong
+        var totalWrongCol = $("<div>").addClass("col-12 px-2");
+        answerRow.append(totalWrongCol);
+
+        var totalWrongTitle = $("<h5>").addClass("score-key pr-2 text-nowrap");
+        totalWrongCol.append(totalWrongTitle);
+        totalWrongTitle.text("Wrong: ");
+
+        var totalWrongText = $("<span>").addClass("score-value");
+        totalWrongTitle.append(totalWrongText);
+        totalWrongText.text(wrong);
+
+        //Create High Scores
+
+        //Create High Scores Title
+        var highScoreTitleCol = $("<div>").addClass("col-12");
+        answerRow.append(highScoreTitleCol);
+        var highScoreTitleText = $("<h4>").addClass("score-title")
+        highScoreTitleCol.append(highScoreTitleText);
+        highScoreTitleText.text("High Scores:");
     }
 
     //Remove some content before creating quiz content
@@ -112,9 +192,15 @@ function startQuiz() {
     timerCol.append(timerText);
 
     //Update timer every 10ms
-    setInterval(
+    var timerInterval = setInterval(
         function () {
-            timerText.text((timer += 0.01).toFixed(2));
+            timer -= .01;
+            updateTimer();
+            if (timer <= 0) {
+                //Don't know exactly why I have to do this yet
+                timer = 0;
+                endQuiz();
+            }
         },
         10
     );
