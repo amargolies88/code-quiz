@@ -26,6 +26,7 @@ let timer = 0;
 let correct = 0;
 var wrong = 0;
 let questionIndex = 0;
+let score = 0;
 
 //MAIN FUNCTION - Executed after Splash Button clicked
 function startQuiz() {
@@ -89,7 +90,11 @@ function startQuiz() {
 
     //Function executed at the end of quiz | Displays Score Etc...
     function endQuiz() {
+
         updateTimer();
+
+        score = Math.round(timer + (correct * timer * 10));
+
         //Clean old answers
         answerRow.empty();
 
@@ -103,8 +108,13 @@ function startQuiz() {
         var scoreCol = $("<div>").addClass("col-12");
         answerRow.append(scoreCol);
 
-        var scoreText = $("<h4>Score: </h4>").addClass("score-title");
-        scoreCol.append(scoreText);
+        var scoreTitle = $("<h4>Score: </h4>").addClass("score-title");
+        scoreCol.append(scoreTitle);
+
+        var scoreText = $("<span>");
+        scoreTitle.append(scoreText);
+        scoreText.text(score);
+
 
         //Display Total Time Col and Total Time Text and set total time text
         var totalTimeCol = $("<div>").addClass("col-12 px-2");
@@ -166,7 +176,9 @@ function startQuiz() {
         totalWrongTitle.append(totalWrongText);
         totalWrongText.text(wrong);
 
-        //Create High Scores
+        //Record initials for highscore and store in localstorage
+        var user = prompt("Enter Name: ");
+        window.localStorage.setItem(user, score);
 
         //Create High Scores Title
         var highScoreTitleCol = $("<div>").addClass("col-12");
@@ -174,6 +186,12 @@ function startQuiz() {
         var highScoreTitleText = $("<h4>").addClass("score-title")
         highScoreTitleCol.append(highScoreTitleText);
         highScoreTitleText.text("High Scores:");
+
+        //Create list of Highest Scores
+        Object.keys(localStorage).forEach(function(key){
+            console.log(localStorage.getItem(key));
+         });
+
     }
 
     //Remove some content before creating quiz content
