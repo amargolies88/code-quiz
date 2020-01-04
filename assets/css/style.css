@@ -2,3 +2,11 @@
     font-size: 75%;
 }
 
+.choice-col{
+    cursor: pointer;
+    background-color: aquamarine;
+}
+
+.choice-col:hover{
+    background-color: chartreuse;
+}

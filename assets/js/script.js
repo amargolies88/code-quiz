@@ -3,12 +3,32 @@ let mainContainer = $("<div>");
 mainContainer.addClass("container-fluid p-sm-5");
 $(document.body).append(mainContainer);
 
-//Building Banner
-let banner = $("<div>").addClass("row no-gutters banner-row");
-mainContainer.append(banner);
+//Building header
+let header = $("<div>").addClass("row no-gutters header-row");
+mainContainer.append(header);
 
-let bannerText = $("<h1>JavaScript Quiz</h1>");
-banner.append(bannerText);
+//Build Page Title
+let headerTitleCol = $("<div>").addClass("col-auto mr-2")
+header.append(headerTitleCol);
+
+let headerText = $("<h1>JavaScript Quiz</h1>");
+headerTitleCol.append(headerText);
+
+//build View High Scores Button Col
+let viewScoresCol = $("<div>").addClass("col");
+header.append(viewScoresCol);
+
+//Build View High Scores Button
+let viewScoresBtn = $("<button>").addClass("btn mt-2 btn-sm btn-success");
+viewScoresCol.append(viewScoresBtn);
+viewScoresBtn.text("View High Scores");
+
+//Get highscores array from local storage if it exists
+var highScores = [];
+if (localStorage.length !== 0) {
+    highScores = JSON.parse(localStorage.highScores);
+    console.log(highScores);
+}
 
 //Build Button Splash Area
 let questionRow = $("<div>").addClass("row no-gutters question-row");
@@ -32,7 +52,7 @@ let score = 0;
 function startQuiz() {
 
     //function to update timer display
-    function updateTimer(){
+    function updateTimer() {
         timerText.text(timer.toFixed(2));
     }
 
@@ -52,7 +72,7 @@ function startQuiz() {
         //Create Choice Col and <span> for each choice
         question.choices.forEach(choice => {
             //Create Choice Col and <span>
-            let choiceCol = $("<div>").addClass("col border");
+            let choiceCol = $("<div>").addClass("col choice-col");
             let choiceText = $("<span>").addClass("choice");
             choiceCol.append(choiceText);
             answerRow.append(choiceCol);
@@ -71,7 +91,7 @@ function startQuiz() {
                     wrong++;
                     timer -= 10;
                 }
-                
+
                 //Clean old answers
                 answerRow.empty();
 
@@ -90,6 +110,7 @@ function startQuiz() {
 
     //Function executed at the end of quiz | Displays Score Etc...
     function endQuiz() {
+        var user = "";
 
         updateTimer();
 
@@ -176,35 +197,93 @@ function startQuiz() {
         totalWrongTitle.append(totalWrongText);
         totalWrongText.text(wrong);
 
-        //Record initials for highscore and store in localstorage
-        var user = prompt("Enter Name: ");
-        window.localStorage.setItem(user, score);
+        //Create form to submit high score
+        var formCol = $("<div>").addClass("col form-col");
+        answerRow.append(formCol);
 
-        //Create High Scores Title
-        var highScoreTitleCol = $("<div>").addClass("col-12");
-        answerRow.append(highScoreTitleCol);
-        var highScoreTitleText = $("<h4>").addClass("score-title")
-        highScoreTitleCol.append(highScoreTitleText);
-        highScoreTitleText.text("High Scores:");
+        var form = $('<form>').addClass("input-name-form");
+        formCol.append(form);
 
-        //Create list of Highest Scores
-        Object.keys(localStorage).forEach(function(key){
-            console.log(localStorage.getItem(key));
-         });
+        var inputName = $('<input type="text" placeholder="Enter Your Name Here" size="30" autofocus>')
+        form.append(inputName);
 
+        var inputNameSubmitBtn = $(`<input type="Submit" value="Submit">`);
+        form.append(inputNameSubmitBtn);
+
+        form.submit(function (event) {
+            event.preventDefault();
+            user = inputName.val();
+            if (user === ""){
+                user = "Anonymous"
+            }
+            var currentPerson = {
+                userName: user,
+                userScore: score
+            };
+
+            //If local storage is empty add first element to array and store
+            if (localStorage.length === 0) {
+                highScores = [currentPerson];
+                localStorage.setItem("highScores", JSON.stringify(highScores));
+            } else {
+                if (score <= highScores[highScores.length - 1].userScore) {
+                    highScores.push(currentPerson);
+                } else {
+                    for (let i = 0; i < highScores.length; i++) {
+                        const person = highScores[i];
+                        if (score > person.userScore) {
+                            highScores.splice(i, 0, currentPerson);
+                            break;
+                        }
+                    }
+                }
+            }
+            localStorage.setItem("highScores", JSON.stringify(highScores));
+            console.log(highScores);
+
+            //Clear Form
+            form.remove();
+
+            //Display High Scores
+
+            //Create High Scores Title
+            var highScoreTitleCol = $("<div>").addClass("col-12");
+            answerRow.append(highScoreTitleCol);
+            var highScoreTitleText = $("<h4>High Scores: </h4>").addClass("score-title")
+            highScoreTitleCol.append(highScoreTitleText);
+            console.log(highScores);
+            for (let i = 0; i < highScores.length; i++) {
+                const person = highScores[i];
+                
+                var personNameCol = $("<div>").addClass("col-7 col-sm-6 border-bottom mb-2 person-name-col");
+                answerRow.append(personNameCol);
+                var personNameText = $("<span>").addClass("highscore-name");
+                personNameCol.append(personNameText);
+                personNameText.text(person.userName);
+
+                var personScoreCol = $("<div>").addClass("col-auto border-bottom mb-2 person-score-col");
+                answerRow.append(personScoreCol);
+                var personScoreText = $("<span>").addClass("highscore-score");
+                personScoreCol.append(personScoreText);
+                personScoreText.text(person.userScore);
+                
+                answerRow.append($("<div>").addClass("w-100"));
+            }
+
+        });
     }
 
     //Remove some content before creating quiz content
     splashButtonStart.remove();
 
     //Create Col with <h4> question text
-    let questionTitleCol = $("<div>").addClass("col question-title-col border");
+    let questionTitleCol = $("<div>").addClass("col question-title-col");
     questionRow.append(questionTitleCol);
     let questionText = $("<h4>").addClass("question-text");
     questionTitleCol.append(questionText);
 
     //Create Col for timer <span>
-    let timerCol = $("<div>").addClass("col-auto border");
+    let timerCol = $("<div>").addClass("col-auto");
     questionRow.append(timerCol);
     let timerText = $("<span>").addClass("timer-text");
     timerCol.append(timerText);
