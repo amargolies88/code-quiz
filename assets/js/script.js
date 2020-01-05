@@ -1,41 +1,41 @@
-//Building Main Container
+//MAIN CONTAINER
 let mainContainer = $("<div>");
 mainContainer.addClass("container-fluid p-sm-5");
 $(document.body).append(mainContainer);
 
-//Building header
+//HEADER
 let header = $("<div>").addClass("row no-gutters header-row");
 mainContainer.append(header);
 
-//Build Page Title
+//PAGE TITLE
 let headerTitleCol = $("<div>").addClass("col-12")
 header.append(headerTitleCol);
 
 let headerText = $("<h1>JavaScript Quiz</h1>").addClass("header-text");
 headerTitleCol.append(headerText);
 
-//Build Button Splash Area
+//BUTTON SPLASH AREA WHICH BECOMES QUESTION AREA
 let questionRow = $("<div>").addClass("row no-gutters question-row");
 mainContainer.append(questionRow);
 
-//Start Button Col
+//START BUTTON COL
 let startButtonCol = $("<div>").addClass("col-auto mr-2");
 questionRow.append(startButtonCol);
 
-//Start Button
+//START BUTTON
 let splashButtonStart = $("<button>Start</button>").addClass("btn btn-myprime");
 startButtonCol.append(splashButtonStart);
 
-//build View High Scores Button Col
+//HIGH SCORES BUTTON COL
 let viewScoresCol = $("<div>").addClass("col-auto");
 questionRow.append(viewScoresCol);
 
-//Build View High Scores Button
+//HIGH SCORES BUTTON
 let viewScoresBtn = $("<button>").addClass("btn btn-myprime");
 viewScoresCol.append(viewScoresBtn);
 viewScoresBtn.text("View High Scores");
 
-//Splash button executes main function startQuiz()
+//Set Start Button to executes startQuiz()
 splashButtonStart.click(startQuiz);
 
 //Create Answer Row

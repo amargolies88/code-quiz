@@ -18,7 +18,8 @@
 }
 
 .header-text{
-    text-shadow: 2px 1px aquamarine;
+    text-shadow: 2px 1px aquamarine, 
+    1px 3px white;
     background-color: #dddddd;
 }
 
